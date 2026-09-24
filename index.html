@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shahriar Sifat | Personal Portfolio</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==================== GLOBAL STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-dark: #09030d;
+            --purple-accent: #8a2be2;
+            --red-accent: #ff0055;
+            --purple-glow: #3b0066;
+            --text-light: #f0f0f0;
+            --card-bg: rgba(25, 10, 35, 0.7);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* ==================== INTRO / WELCOME SCREEN ==================== */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #1a0826 0%, #0d021a 50%, #000000 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        /* Darkish Glows with Green, Yellow & Red Ambient Lights */
+        .ambient-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .glow-red { background: #ff0000; top: 10%; left: 20%; }
+        .glow-green { background: #00ff66; bottom: 15%; left: 10%; }
+        .glow-yellow { background: #ffd700; top: 20%; right: 15%; }
+        .glow-purple { background: #9d00ff; bottom: 10%; right: 20%; }
+
+        /* Upper Corners Spider Webs */
+        .spider-web {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .web-top-left { top: 0; left: 0; }
+        .web-top-right { top: 0; right: 0; transform: scaleX(-1); }
+
+        /* Animated Intro Text */
+        .welcome-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 0, 85, 0.6), 0 0 40px rgba(138, 43, 226, 0.6);
+            opacity: 0;
+            transform: translateX(100px);
+            animation: slideInRight 1s forwards ease-out;
+            animation-delay: 0.3s;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.4rem;
+            color: #d1c4e9;
+            margin-top: 15px;
+            margin-bottom: 35px;
+            opacity: 0;
+            transform: translateY(60px);
+            animation: slideInUp 1s forwards ease-out;
+            animation-delay: 1.2s;
+        }
+
+        .intro-buttons {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 1s forwards ease-in;
+            animation-delay: 2.1s;
+        }
+
+        .btn-intro {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-explore {
+            background: linear-gradient(45deg, var(--red-accent), var(--purple-accent));
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+        }
+
+        .btn-explore:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.8);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        /* Keyframe Animations */
+        @keyframes slideInRight {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* ==================== MAIN PAGE & DASHBOARD ==================== */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            min-height: 100vh;
+            background: radial-gradient(circle at top right, #1f052d, #09030d 60%);
+        }
+
+        /* Top Bar */
+        .navbar {
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 3, 13, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 0, 85, 0.2);
+        }
+
+        /* Large Red Dashboard Button (Top-Left) */
+        .dashboard-btn {
+            background: linear-gradient(45deg, #ff0055, #b3003b);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.9);
+        }
+
+        /* Sidebar Overlay & Menu */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: rgba(15, 5, 25, 0.95);
+            backdrop-filter: blur(15px);
+            border-right: 2px solid var(--red-accent);
+            z-index: 1000;
+            transition: 0.4s ease;
+            padding: 30px 20px;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar-header h3 {
+            color: var(--red-accent);
+            font-size: 1.4rem;
+        }
+
+        .close-btn {
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            color: #d1c4e9;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 12px 15px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background: linear-gradient(90deg, rgba(255, 0, 85, 0.2), rgba(138, 43, 226, 0.2));
+            color: #fff;
+            padding-left: 22px;
+            border-left: 4px solid var(--purple-accent);
+        }
+
+        /* ==================== CONTENT SECTIONS ==================== */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            display: none; /* Controlled via Dashboard JS */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active-section {
+            display: block;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+
+        .profile-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid var(--red-accent);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1.name {
+            font-size: 2.2rem;
+            background: linear-gradient(45deg, #ffffff, #d1c4e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            color: var(--red-accent);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--purple-accent);
+            border-bottom: 2px solid var(--red-accent);
+            display: inline-block;
+            margin-bottom: 25px;
+            padding-bottom: 5px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 0, 85, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--purple-accent);
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--red-accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== INTRO / WELCOME OVERLAY ==================== -->
+    <div id="intro-overlay">
+        <!-- Ambient Glowing Lights -->
+        <div class="ambient-glow glow-red"></div>
+        <div class="ambient-glow glow-green"></div>
+        <div class="ambient-glow glow-yellow"></div>
+        <div class="ambient-glow glow-purple"></div>
+
+        <!-- Upper Corners Spider Webs (SVG) -->
+        <svg class="spider-web web-top-left" viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1">
+            <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L100,100 M0,0 L40,100 M0,0 L100,40"/>
+            <path d="M20,0 Q20,20 0,20 M40,0 Q40,40 0,40 M60,0 Q60,60 0,60 M80,0 Q80,80 0,80"/>
+        </svg>
+
+        <svg class="spider-web web-top-right" viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1">
+            <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L100,100 M0,0 L40,100 M0,0 L100,40"/>
+            <path d="M20,0 Q20,20 0,20 M40,0 Q40,40 0,40 M60,0 Q60,60 0,60 M80,0 Q80,80 0,80"/>
+        </svg>
+
+        <!-- Welcome Text Content -->
+        <h1 class="welcome-title">Welcome</h1>
+        <p class="welcome-subtitle">Thank you for visiting my portfolio</p>
+
+        <!-- Action Buttons -->
+        <div class="intro-buttons">
+            <button class="btn-intro btn-explore" onclick="enterSite()">Explore More</button>
+            <button class="btn-intro btn-back" onclick="goBack()">Back</button>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN PORTFOLIO PAGE ==================== -->
+    <div id="main-content">
+
+        <!-- Navbar -->
+        <nav class="navbar">
+            <button class="dashboard-btn" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars-staggered"></i> Dashboard
+            </button>
+            <div style="font-weight: 700; color: #fff;">SHAHRIAR SIFAT</div>
+        </nav>
+
+        <!-- Sidebar / Dashboard Menu -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-gauge-high"></i> Dashboard</h3>
+                <span class="close-btn" onclick="toggleSidebar()">&times;</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection('overview')"><i class="fa-solid fa-user"></i> Overview</a></li>
+                <li><a href="#" onclick="showSection('admission')"><i class="fa-solid fa-graduation-cap"></i> Admission Test</a></li>
+                <li><a href="#" onclick="showSection('academic')"><i class="fa-solid fa-book-bookmark"></i> Academic Info</a></li>
+                <li><a href="#" onclick="showSection('projects')"><i class="fa-solid fa-code"></i> Projects</a></li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="container">
+
+            <!-- OVERVIEW SECTION -->
+            <div id="overview" class="section active-section">
+                <div class="profile-card">
+                    <!-- Replace with your image file name if needed -->
+                    <img src="images/profile.jpeg" alt="Shahriar Sifat" class="profile-img" onerror="this.src='https://via.placeholder.com/140'">
+                    <h1 class="name">Shahriar Sifat</h1>
+                    <p class="tagline">Learner | Likes Coding Stuffs| Beginner</p>
+                    <p style="color: #bbb; max-width: 600px; margin: 0 auto 20px;">
+                        Assalamu Alaikum, Thanks for visiting. I am currently a student at IASDS, University of Dhaka. I like programming, mathematical stuffs, learning programming stuffs. Though I'm just a beginner. I've knowledge in basic C,SQL, and PYTHON. Soon to be add more in my list. Click one the dashboard tab to see more about me.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/shahriar-sifat-b00672424" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="https://github.com/Sh3fz" target="_blank"><i class="fa-brands fa-github"></i></a>
+                        <a href="mailto:s56043630@gmail.com" onclick="openMail(event)"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMISSION SECTION -->
+            <div id="admission" class="section">
+                <h2 class="section-title">Admission Achievements</h2>
+                <div class="grid">
+
+                    <!-- 1. DU Result -->
+                    <div class="card">
+                        <img src="images/r1.jpeg" alt="DU Result" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=DU+Result'">
+                        <h3 style="color: var(--red-accent); margin-top: 12px; font-size: 1.2rem;">University of Dhaka (DU)</h3>
+                        <p style="color: #ccc; margin-top: 5px;">A-Unit | Achieved 1259th merit position and currently a student at DU.</p>
+                    </div>
+
+                    <!-- 2. KUET Result -->
+                    <div class="card">
+                        <img src="images/r3.jpeg" alt="KUET Result" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=KUET+Result'">
+                        <h3 style="color: var(--red-accent); margin-top: 12px; font-size: 1.2rem;">KUET</h3>
+                        <p style="color: #ccc; margin-top: 5px;">Achieved 774th position.</p>
+                    </div>
+
+                    <!-- 3. SUST Result -->
+                    <div class="card">
+                        <img src="images/r2.jpeg" alt="SUST Result" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=SUST+Result'">
+                        <h3 style="color: var(--red-accent); margin-top: 12px; font-size: 1.2rem;">SUST</h3>
+                        <p style="color: #ccc; margin-top: 5px;">Achieved 562nd position.</p>
+                    </div>
+
+                    <!-- 4. BUTEX Result -->
+                    <div class="card">
+                        <img src="images/r4.jpeg" alt="BUTEX Result" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=BUTEX+Result'">
+                        <h3 style="color: var(--red-accent); margin-top: 12px; font-size: 1.2rem;">BUTEX</h3>
+                        <p style="color: #ccc; margin-top: 5px;">Achieved 502nd position.</p>
+                    </div>
+
+                    <!-- 5. MIST Result -->
+                    <div class="card">
+                        <img src="images/r5.jpeg" alt="MIST Result" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=MIST+Result'">
+                        <h3 style="color: var(--red-accent); margin-top: 12px; font-size: 1.2rem;">MIST</h3>
+                        <p style="color: #ccc; margin-top: 5px;">Achieved 141st position.</p>
+                    </div>
+
+                    <!-- 6. JU Result -->
+                    <div class="card">
+                        <img src="images/r6.jpeg" alt="JU Result" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=JU+Result'">
+                        <h3 style="color: var(--red-accent); margin-top: 12px; font-size: 1.2rem;">Jahangirnagar University (JU)</h3>
+                        <p style="color: #ccc; margin-top: 5px;">Achieved 25th position in 4th Shift.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ACADEMIC SECTION -->
+            <div id="academic" class="section">
+                <h2 class="section-title">Academic Achievements</h2>
+                <div class="grid">
+
+                    <!-- 1. HSC -->
+                    <div class="card">
+                        <img src="images/hsc.jpeg" alt="HSC" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=Academic+Achievement+HSC'">
+                        <h3 style="color: var(--purple-accent); margin-top: 12px; font-size: 1.2rem;">HSC</h3>
+                        <p style="color: #ccc; margin-top: 5px;">GPA 5.00 from Dhaka City College | Received Board Scholarship in General grade (~96.5% marks in PCM).</p>
+                    </div>
+
+                    <!-- 2. SSC -->
+                    <div class="card">
+                        <img src="images/ssc.jpeg" alt="SSC" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/300x180?text=Academic+Achievement+SSC'">
+                        <h3 style="color: var(--purple-accent); margin-top: 12px; font-size: 1.2rem;">SSC</h3>
+                        <p style="color: #ccc; margin-top: 5px;">GPA 5.00 from Government Science High School.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PROJECTS SECTION -->
+            <div id="projects" class="section">
+                <h2 class="section-title">Projects & Research</h2>
+
+                <div style="display: flex; justify-content: center; align-items: center; min-height: 250px; text-align: center;">
+                    <h1 class="coming-soon-text">Coming Soon...</h1>
+                </div>
+
+                <style>
+                    .coming-soon-text {
+                        color: #ffffff;
+                        font-size: 2.8rem;
+                        font-weight: 700;
+                        letter-spacing: 4px;
+                        animation: pulseGlow 2.5s ease-in-out infinite;
+                    }
+
+                    @keyframes pulseGlow {
+                        0% {
+                            opacity: 0.3;
+                            transform: scale(0.98);
+                            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+                        }
+
+                        50% {
+                            opacity: 1;
+                            transform: scale(1.04);
+                            text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 35px rgba(255, 0, 85, 0.6);
+                        }
+
+                        100% {
+                            opacity: 0.3;
+                            transform: scale(0.98);
+                            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+                        }
+                    }
+                </style>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // Enter Main Site
+        function enterSite() {
+            const overlay = document.getElementById('intro-overlay');
+            const mainContent = document.getElementById('main-content');
+
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 50);
+            }, 800);
+        }
+
+        // Back Button Behavior
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "https://www.google.com";
+            }
+        }
+
+        // Toggle Dashboard Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Switch Sections from Dashboard
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active-section'));
+
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active-section');
+            }
+
+            // Close sidebar
+            toggleSidebar();
+        }
+
+        // Smart Mail Handler (PC vs Mobile)
+        function openMail(e) {
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (!isMobile) {
+                e.preventDefault();
+                window.open('https://mail.google.com/mail/?view=cm&fs=1&to=s56043630@gmail.com', '_blank');
+            }
+        }
+    </script>
+
+    <!-- IMAGE FULL SCREEN MODAL -->
+    <div id="imageModal" style="display:none; position:fixed; z-index:9999; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; cursor:pointer;" onclick="this.style.display='none'">
+        <img id="modalImg" style="max-width:90%; max-height:80%; border-radius:10px; box-shadow:0 0 30px rgba(255,0,85,0.8);">
+    </div>
+
+    <script>
+        // Make all card images clickable to expand
+        document.querySelectorAll('.card img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.onclick = function() {
+                document.getElementById('imageModal').style.display = 'flex';
+                document.getElementById('modalImg').src = this.src;
+            }
+        });
+    </script>
+
+</body>
+</html>
